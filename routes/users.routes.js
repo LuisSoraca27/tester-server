@@ -24,10 +24,10 @@ const {
 const usersRouter = express.Router();
 
 
+usersRouter.post("/login", login);
 
 usersRouter.post("/", createUser);
 
-usersRouter.post("/login", login);
 
 // Protecting below endpoints
 usersRouter.use(protectSession);
