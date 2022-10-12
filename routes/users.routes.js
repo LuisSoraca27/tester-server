@@ -26,7 +26,7 @@ const usersRouter = express.Router();
 
 usersRouter.post("/login", login);
 
-usersRouter.post("/", createUser);
+usersRouter.post("/", createUserValidators,createUser);
 
 
 // Protecting below endpoints
