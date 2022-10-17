@@ -4,10 +4,16 @@ const dotenv = require("dotenv");
 
 // Models
 const { User } = require("../models/user.model");
+const { Record } = require("../models/record.model");
+const { Cart } = require("../models/cart.model");
+const { ProductsInCart } = require("../models/productsInCart.model");
+const { Product } = require("../models/product.model");
+
 
 // Utils
 const { catchAsync } = require("../utils/catchAsync.util");
 const { AppError } = require("../utils/appError.util");
+
 
 dotenv.config({ path: "./config.env" });
 
@@ -135,10 +141,62 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
+const getRecordUser = catchAsync(async (req, res, next) => {
+  const { sessionUser } = req;
+
+  const records = await Record.findAll({
+    where: { userId: sessionUser.id, status: "active" },
+    include: {
+      model: Cart,
+      attributes: ["id", "userId", "status"],
+      include: {
+        model: ProductsInCart,
+        attributes: ["id", "productId", "quantity", "status"],
+        include: { model: Product, attributes: ["id", "name"] },
+      },
+    },
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: { records },
+  });
+})
+
+const getRecordById = catchAsync(async (req, res, next) => {
+  const { sessionUser } = req;
+  const { id } = req.params;
+
+  const record = await Record.findOne({
+    where: { userId: sessionUser.id, id },
+    include: {
+      model: Cart,
+      attributes: ["id", "userId", "status"],
+      include: {
+        model: ProductsInCart,
+        attributes: ["id", "productId", "quantity", "status"],
+        include: { model: Product, attributes: ["id", "name"] },
+      },
+    },
+  });
+
+  if (!record) {
+    return next(new AppError("this record not exist", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: { record },
+  });
+});
+
+
 module.exports = {
   getDataUser,
   createUser,
   updateDataUser,
   updatePasswordUser,
   login,
+  getRecordUser,
+  getRecordById,
 };
