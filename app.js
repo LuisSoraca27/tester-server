@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const morgan = require("morgan");
+const cors = require("cors")
 
 // Routers
 const { usersRouter } = require("./routes/users.routes");
@@ -23,6 +24,8 @@ app.use(helmet());
 app.use(compression());
 
 app.use(morgan("combined"));
+
+app.use(cors())
 
 // Define endpoints
 
