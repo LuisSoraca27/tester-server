@@ -25,7 +25,10 @@ const getProductInCart = catchAsync(async (req, res, next) => {
           {
             model: Product,
             attributes: ["id", "name", "description", "price", "quantity"],
-            include: [{ model: CategoryProduct, attributes: ["id", "name"] }],
+            include: [
+              { model: CategoryProduct, attributes: ["id", "name"] },
+              { model: Commerce, attributes: ["id", "name"] },
+            ],
           },
         ],
       },
