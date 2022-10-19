@@ -58,7 +58,7 @@ const getAllProducts = catchAsync(async (req, res, next) => {
       where: { status: "active" },
       attributes: ["id", "name", "description", "quantity", "price","createdAt",  ],
       include: [
-        { model: Commerce, attributes: ["id", "name"] },
+        { model: Commerce, attributes: ["id", "name","address"] },
         { model: CategoryProduct, attributes: ["id", "name"] },
         { model: ProductImg },
       ],
